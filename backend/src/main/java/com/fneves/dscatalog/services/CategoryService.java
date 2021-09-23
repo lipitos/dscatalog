@@ -5,6 +5,7 @@ import com.fneves.dscatalog.entities.Category;
 import com.fneves.dscatalog.repositories.CategoryRepository;
 import com.fneves.dscatalog.services.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,15 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
         Optional<Category> obj = repository.findById(id);
-        Category categoryDto = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
-        return new CategoryDTO(categoryDto);
+        Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada."));
+        return new CategoryDTO(entity);
+    }
+
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category entity = new Category();
+        entity.setName(dto.getName());
+        entity = repository.save(entity);
+        return new CategoryDTO(entity);
     }
 }
