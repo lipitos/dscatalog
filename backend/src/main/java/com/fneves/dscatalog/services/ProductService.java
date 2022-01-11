@@ -1,5 +1,17 @@
 package com.fneves.dscatalog.services;
 
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fneves.dscatalog.dto.CategoryDTO;
 import com.fneves.dscatalog.dto.ProductDTO;
 import com.fneves.dscatalog.entities.Category;
@@ -8,16 +20,6 @@ import com.fneves.dscatalog.repositories.CategoryRepository;
 import com.fneves.dscatalog.repositories.ProductRepository;
 import com.fneves.dscatalog.services.exceptions.DatabaseException;
 import com.fneves.dscatalog.services.exceptions.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -29,8 +31,8 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(PageRequest pageRequest){
-        Page<Product> list = repository.findAll(pageRequest);
+    public Page<ProductDTO> findAllPaged(Pageable pageable){
+        Page<Product> list = repository.findAll(pageable);
         //Expresão Lambda
         Page<ProductDTO> listDto = list.map(x -> new ProductDTO(x));
         return listDto;

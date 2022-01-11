@@ -1,23 +1,22 @@
 package com.fneves.dscatalog.services;
 
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fneves.dscatalog.dto.CategoryDTO;
 import com.fneves.dscatalog.entities.Category;
 import com.fneves.dscatalog.repositories.CategoryRepository;
 import com.fneves.dscatalog.services.exceptions.DatabaseException;
 import com.fneves.dscatalog.services.exceptions.ResourceNotFoundException;
-import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -26,8 +25,8 @@ public class CategoryService {
     private CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
-        Page<Category> list = repository.findAll(pageRequest);
+    public Page<CategoryDTO> findAllPaged(Pageable pageable){
+        Page<Category> list = repository.findAll(pageable);
         //Expresão Lambda
         Page<CategoryDTO> listDto = list.map(x -> new CategoryDTO(x));
         return listDto;
